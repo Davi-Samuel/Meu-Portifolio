@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minhas Finanças - Simples</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fb;
+            color: #333;
+            transition: all 0.3s ease;
+        }
+        
+        body.dark-mode {
+            background-color: #1a1a1a;
+            color: #f0f0f0;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: #4361ee;
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .dark-mode header {
+            background: #3a0ca3;
+        }
+        
+        h1 {
+            font-size: 24px;
+        }
+        
+        .theme-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 11px;
+            width: auto;
+            min-width: 80px;
+        }
+        
+        .theme-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .balance {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .dark-mode .balance {
+            background: #2d2d2d;
+        }
+        
+        .balance-amount {
+            font-size: 32px;
+            font-weight: bold;
+            margin: 10px 0;
+            color: #4361ee;
+        }
+        
+        .dark-mode .balance-amount {
+            color: #4cc9f0;
+        }
+        
+        .summary {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        
+        .income, .expenses {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            width: 48%;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .dark-mode .income, .dark-mode .expenses {
+            background: #2d2d2d;
+        }
+        
+        .income {
+            border-left: 4px solid #4cc9f0;
+        }
+        
+        .expenses {
+            border-left: 4px solid #f72585;
+        }
+        
+        .income-amount {
+            color: #4cc9f0;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .expenses-amount {
+            color: #f72585;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .form-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .dark-mode .form-container {
+            background: #2d2d2d;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            background: white;
+            color: #333;
+        }
+        
+        .dark-mode input, .dark-mode select {
+            background: #3d3d3d;
+            color: #f0f0f0;
+            border-color: #555;
+        }
+        
+        button {
+            background: #4361ee;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+        
+        button:hover {
+            background: #3a0ca3;
+        }
+        
+        .dark-mode button {
+            background: #4cc9f0;
+        }
+        
+        .dark-mode button:hover {
+            background: #3aa8d0;
+        }
+        
+        .transactions {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .dark-mode .transactions {
+            background: #2d2d2d;
+        }
+        
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .dark-mode .transaction-item {
+            border-bottom-color: #444;
+        }
+        
+        .transaction-item:last-child {
+            border-bottom: none;
+        }
+        
+        .transaction-info {
+            flex-grow: 1;
+        }
+        
+        .transaction-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .transaction-category {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .dark-mode .transaction-category {
+            color: #aaa;
+        }
+        
+        .transaction-amount {
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .income-color {
+            color: #4cc9f0;
+        }
+        
+        .expense-color {
+            color: #f72585;
+        }
+        
+        .delete-btn {
+            background: #f72585;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        
+        .delete-btn:hover {
+            background: #d1145a;
+        }
+        
+        .empty {
+            text-align: center;
+            color: #666;
+            padding: 40px;
+        }
+        
+        .dark-mode .empty {
+            color: #aaa;
+        }
+        
+        .filter {
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>💰 Minhas Finanças</h1>
+            <button class="theme-btn" id="themeBtn">🌙 Escuro</button>
+        </header>
+        
+        <div class="balance">
+            <h2>Saldo Atual</h2>
+            <div class="balance-amount" id="balance">R$ 0,00</div>
+        </div>
+        
+        <div class="summary">
+            <div class="income">
+                <h3>Receitas</h3>
+                <div class="income-amount" id="income">R$ 0,00</div>
+            </div>
+            <div class="expenses">
+                <h3>Despesas</h3>
+                <div class="expenses-amount" id="expenses">R$ 0,00</div>
+            </div>
+        </div>
+        
+        <div class="form-container">
+            <h2>Adicionar Transação</h2>
+            <form id="transactionForm">
+                <div class="form-group">
+                    <label for="description">Descrição:</label>
+                    <input type="text" id="description" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="amount">Valor (R$):</label>
+                    <input type="number" id="amount" step="0.01" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="type">Tipo:</label>
+                    <select id="type" required>
+                        <option value="">Selecione...</option>
+                        <option value="income">Receita</option>
+                        <option value="expense">Despesa</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="category">Categoria:</label>
+                    <select id="category" required>
+                        <option value="">Selecione...</option>
+                        <option value="Salário">Salário</option>
+                        <option value="Alimentação">Alimentação</option>
+                        <option value="Transporte">Transporte</option>
+                        <option value="Casa">Casa</option>
+                        <option value="Lazer">Lazer</option>
+                        <option value="Outros">Outros</option>
+                    </select>
+                </div>
+                
+                <button type="submit">Adicionar Transação</button>
+            </form>
+        </div>
+        
+        <div class="transactions">
+            <h2>Transações Recentes</h2>
+            <div class="filter">
+                <label for="filterType">Filtrar por tipo:</label>
+                <select id="filterType">
+                    <option value="all">Todos</option>
+                    <option value="income">Receitas</option>
+                    <option value="expense">Despesas</option>
+                </select>
+            </div>
+            <div id="transactionList">
+                <div class="empty">
+                    <p>Nenhuma transação cadastrada</p>
+                    <p>Adicione sua primeira transação acima</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let transactions = [];
+        
+        const transactionForm = document.getElementById('transactionForm');
+        const transactionList = document.getElementById('transactionList');
+        const balanceElement = document.getElementById('balance');
+        const incomeElement = document.getElementById('income');
+        const expensesElement = document.getElementById('expenses');
+        const filterType = document.getElementById('filterType');
+        const themeBtn = document.getElementById('themeBtn');
+        const body = document.body;
+        
+        function toggleTheme() {
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                themeBtn.textContent = '☀️ Modo Claro';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                themeBtn.textContent = '🌙 Modo Escuro';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+        
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                body.classList.add('dark-mode');
+                themeBtn.textContent = '☀️ Modo Claro';
+            }
+        }
+        
+        function loadTransactions() {
+            const saved = localStorage.getItem('transactions');
+            if (saved) {
+                transactions = JSON.parse(saved);
+            }
+            updateDisplay();
+        }
+        
+        function saveTransactions() {
+            localStorage.setItem('transactions', JSON.stringify(transactions));
+        }
+        
+        function addTransaction(description, amount, type, category) {
+            const transaction = {
+                id: Date.now(), 
+                description: description,
+                amount: parseFloat(amount),
+                type: type,
+                category: category,
+                date: new Date().toLocaleDateString() 
+            };
+            
+            transactions.push(transaction);
+            saveTransactions();
+            updateDisplay();
+        }
+        
+        function removeTransaction(id) {
+            if (confirm('Tem certeza que quer excluir esta transação?')) {
+                const newTransactions = [];
+                for (let i = 0; i < transactions.length; i++) {
+                    if (transactions[i].id !== id) {
+                        newTransactions.push(transactions[i]);
+                    }
+                }
+                transactions = newTransactions;
+                saveTransactions();
+                updateDisplay();
+            }
+        }
+        
+        function calculateTotals() {
+            let income = 0;
+            let expenses = 0;
+            
+            for (let i = 0; i < transactions.length; i++) {
+                if (transactions[i].type === 'income') {
+                    income += transactions[i].amount;
+                } else {
+                    expenses += transactions[i].amount;
+                }
+            }
+            
+            const balance = income - expenses;
+            
+            return {
+                income: income,
+                expenses: expenses,
+                balance: balance
+            };
+        }
+        
+        function updateDisplay() {
+            const totals = calculateTotals();
+            const filterValue = filterType.value;
+            
+            balanceElement.textContent = 'R$ ' + totals.balance.toFixed(2);
+            incomeElement.textContent = 'R$ ' + totals.income.toFixed(2);
+            expensesElement.textContent = 'R$ ' + totals.expenses.toFixed(2);
+            
+            updateTransactionList(filterValue);
+        }
+        
+        function updateTransactionList(filter) {
+            transactionList.innerHTML = '';
+            
+            if (transactions.length === 0) {
+                transactionList.innerHTML = `
+                    <div class="empty">
+                        <p>Nenhuma transação cadastrada</p>
+                        <p>Adicione sua primeira transação acima</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let filteredTransactions = transactions;
+            if (filter !== 'all') {
+                filteredTransactions = [];
+                for (let i = 0; i < transactions.length; i++) {
+                    if (transactions[i].type === filter) {
+                        filteredTransactions.push(transactions[i]);
+                    }
+                }
+            }
+            
+            if (filteredTransactions.length === 0) {
+                transactionList.innerHTML = `
+                    <div class="empty">
+                        <p>Nenhuma transação encontrada</p>
+                        <p>Tente mudar o filtro</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            for (let i = 0; i < filteredTransactions.length; i++) {
+                const transaction = filteredTransactions[i];
+                const transactionElement = document.createElement('div');
+                transactionElement.className = 'transaction-item';
+                
+                transactionElement.innerHTML = `
+                    <div class="transaction-info">
+                        <div class="transaction-title">${transaction.description}</div>
+                        <div class="transaction-category">${transaction.category} • ${transaction.date}</div>
+                    </div>
+                    <div class="transaction-amount ${transaction.type === 'income' ? 'income-color' : 'expense-color'}">
+                        ${transaction.type === 'income' ? '+' : '-'} R$ ${transaction.amount.toFixed(2)}
+                    </div>
+                    <button class="delete-btn" onclick="removeTransaction(${transaction.id})">X</button>
+                `;
+                
+                transactionList.appendChild(transactionElement);
+            }
+        }
+        
+        transactionForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const description = document.getElementById('description').value;
+            const amount = document.getElementById('amount').value;
+            const type = document.getElementById('type').value;
+            const category = document.getElementById('category').value;
+            
+            addTransaction(description, amount, type, category);
+            
+            transactionForm.reset();
+        });
+        
+        filterType.addEventListener('change', function() {
+            updateDisplay();
+        });
+        
+        themeBtn.addEventListener('click', toggleTheme);
+        
+        loadTheme();
+        loadTransactions();
+    </script>
+</body>
+</html>
